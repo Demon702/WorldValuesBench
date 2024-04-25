@@ -2,7 +2,7 @@
 
 **NOTE: This repository is under construction and will be finalized soon.**
 
-WorldValuesBench is a global-scale benchmark dataset for studying multi-cultural human value awareness of language models, based on an impactful social science project called the [World Values Survey (WVS) Wave 7](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
+WorldValuesBench is a global-scale benchmark dataset for studying multi-cultural human value awareness of language models, derived from an impactful social science project called the [World Values Survey (WVS) Wave 7](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
 
 ## Task
 A safe and personalized language model should be aware of multi-cultural values and the answer distribution that people from various backgrounds may provide.
@@ -128,4 +128,12 @@ This directory contains our evaluation script and visualizations.
 
 - **evaluation_and_plot.ipynb**: Jupyter notebook that has all the visualizations present in the paper.
 - **model_outputs**: All the model outputs from our experiments for reproducibility and facilitate further research.
+  
+## Citation
+
+Zhao, W., Mondal, D., Tandon, N., Dillion, D., Gray, K. & Gu, Y. (2024). WorldValuesBench: A Large-Scale Benchmark Dataset for Multi-Cultural Value Awareness of Language Models. arXiv preprint arXiv:0000.00000.
+
+Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano, J., Lagos, M., Norris, P., Ponarin, E. & Puranen B. (2022): World Values Survey Wave 7 (2017-2022) Cross-National Data-Set. Version: 4.0.0. World Values Survey Association. DOI: doi.org/10.14281/18241.18
+
+
 
