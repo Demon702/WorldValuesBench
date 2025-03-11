@@ -50,13 +50,13 @@ This directory contains the benchmark dataset.
     - Maps `question_id` to question texts and metadata.
 - **full**
 	- **full_demographic_qa.tsv**
-			- Each row is a participant with a unique D_INTERVIEW identifier. 
-			- Each column is a demographic question/variable that can be studied.
-			- The sheet has text answers of 93278 participants (rows) for 42 demographic questions (columns).
+		- Each row is a participant with a unique D_INTERVIEW identifier. 
+		- Each column is a demographic question/variable that can be studied.
+		- The sheet has text answers of 93278 participants (rows) for 42 demographic questions (columns).
 	- **full_value_qa.tsv**
-			- Each row is a participant with a unique D_INTERVIEW identifier. 
-			- Each column is a value question that can be studied.
-			- The sheet has text answers of 93278 participants (rows) for 240 value questions (columns).
+		- Each row is a participant with a unique D_INTERVIEW identifier. 
+		- Each column is a value question that can be studied.
+		- The sheet has text answers of 93278 participants (rows) for 240 value questions (columns).
 - **train**: similar to the above, 65294 (70%) participants
 - **valid**: similar to the above, 13991 (15%) participants
 - **test**: similar to the above, 13993 (15%) participants
@@ -86,18 +86,18 @@ This directory contains a few intermediate and potentially reusable files that a
 
 ### evaluation 
 This directory contains our evaluation script and visualizations.
-- **evaluate.py**: It contains our evaluation script. It calculates the Earth Mover's Distance or (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html) between the ground truth distribution and model distribution for each question. It expects the input to be a csv / tsv file with the following three columns-
+- **evaluate.py**: It contains our evaluation script. It calculates the Earth Mover's Distance or (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html) between the ground truth distribution and model distribution for each question. It expects the input to be a csv / tsv file with the following three columns
 	- **QUESTION_ID** (The question key or ID from the dataset)
 	- **PARTICIPANT_ID** (The participant ID or D_INTERVIEW column from the dataset)
 	- **SCORE** (Model output for participant PARTICIPANT_ID and question QUESTION_ID)
 
 	You can provide any subset of questions and participants in the input file in any order.  
 
-	Our evaluation script outputs a dictionary and optionally writes it to a json file (if the `--output-file` flag is set). In the output -
-	- keys are QUESTION_ID s
+	Our evaluation script outputs a dictionary and optionally writes it to a json file (if the `--output-file` flag is set). In the output
+	- keys are QUESTION_IDs
 	- values are Earth Mover's Distance between model output distribution and ground truth distribution for that question.
 		 
-	A sample inut file would look like-
+	A sample inut file would look like
 
 	| QUESTION_ID | PARTICIPANT_ID | SCORE   |
 	|-------------|--------------- |---------|
@@ -108,7 +108,7 @@ This directory contains our evaluation script and visualizations.
 	|  Q3	        | 410070959	     |   3     |
 	|  Q3	        | 364072161	     |   3     |
 
-	A sample output would look like-
+	A sample output would look like
 
 	```
 	{
@@ -118,11 +118,11 @@ This directory contains our evaluation script and visualizations.
 	}
 	```
 		
-	To run evaluation, run -
+	To run evaluation, run
 		
 	`python evaluate.py --input-file <input-file> --output-file <path_to_write_output_json>`
 
-	You can also specify the input file separator if it's not a comma (,). For example, to run evaluation on our GPT-3.5 model (with demographic) outputs, run - 
+	You can also specify the input file separator if it's not a comma (,). For example, to run evaluation on our GPT-3.5 model (with demographic) outputs, run
 
 	`python evaluate.py --input-file model_outputs/gpt-3.5_with_demographics.tsv --output-file gpt-3.5_with_demographics-output.json --input-file-separator \\t`
 
@@ -131,7 +131,7 @@ This directory contains our evaluation script and visualizations.
   
 ## Citation
 
-Wenlong Zhao, Debanjan Mondal, Niket Tandon, Danica Dillion, Kurt Gray, and Yuling Gu. 2024. [WorldValuesBench: A Large-Scale Benchmark Dataset for Multi-Cultural Value Awareness of Language Models](https://aclanthology.org/2024.lrec-main.1539). In Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024), pages 17696–17706, Torino, Italia. ELRA and ICCL.
+Wenlong Zhao*, Debanjan Mondal*, Niket Tandon, Danica Dillion, Kurt Gray, and Yuling Gu. 2024. [WorldValuesBench: A Large-Scale Benchmark Dataset for Multi-Cultural Value Awareness of Language Models](https://aclanthology.org/2024.lrec-main.1539). In Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024), pages 17696–17706, Torino, Italia. ELRA and ICCL.
 
 Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano, J., Lagos, M., Norris, P., Ponarin, E. & Puranen B. (2022): World Values Survey Wave 7 (2017-2022) Cross-National Data-Set. Version: 4.0.0. World Values Survey Association. DOI: doi.org/10.14281/18241.18
 
