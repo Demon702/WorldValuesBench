@@ -33,7 +33,14 @@ Your output should be in the following format:
 }
 ```
 
-## Dataset Statistics
+## Repository Overview
+### dataset_construction
+This directory contains a few intermediate and potentially reusable files that are generated during our dataset construction procedure.
+- **data_preparation.py**: It contains the end-to-end code to process the raw data and produce our structured dataset present in [WorldValuesBench](WorldValuesBench), including the full, train, valid, and test splits.
+- **question_metadata.json**: It contains useful metadata for each question present in the dataset, same as [WorldValuesBench/question_metadata.json](WorldValuesBench/question_metadata.json).
+- **codebook.json**: It contains the mapping between the numerical answer (present in raw file) and the natural language answer.
+- **answer_adjustment.json**: It contains the remapping required for some of the answer choices to make them monotonic and ordinal.
+- **probe_set_construction.py**: It contains the code to produce our probe set.
 
 | Split | #participants | #examples   |
 |-------|---------------|-------------|
@@ -43,7 +50,6 @@ Your output should be in the following format:
 | full  | 93,278        | 21,492,393  |
 | probe | 4,860         | 8,280       |
 
-## Repository Overview
 ### WorldValuesBench
 This directory contains the benchmark dataset.
 - **question_metadata.json**
@@ -71,17 +77,6 @@ This directory contains the benchmark dataset.
 		- The `Question` column contains the IDs of the value questions that we study and can be used to retrieve the question from **value_questions.json** or **question_metadata.json**.
 		- The `Continent`, `Urban / Rural`, `Education` columns cluster participants into demographic groups that we study.
 		- The `D_INTERVIEW` column can be used to uniquely identify a participant and retrieve the participant demographic attributes and answer to the question from the valid set tsv files.
-
-
-
-### dataset_construction
-This directory contains a few intermediate and potentially reusable files that are generated during our dataset construction procedure.
-- **data_preparation.py**: It contains the end-to-end code to process the raw data and produce our structured dataset present in [WorldValuesBench](WorldValuesBench), including the full, train, valid, and test splits.
-- **question_metadata.json**: It contains useful metadata for each question present in the dataset, same as [WorldValuesBench/question_metadata.json](WorldValuesBench/question_metadata.json).
-- **codebook.json**: It contains the mapping between the numerical answer (present in raw file) and the natural language answer.
-- **answer_adjustment.json**: It contains the remapping required for some of the answer choices to make them monotonic and ordinal.
-- **probe_set_construction.py**: It contains the code to produce our probe set.
-
 
 ### evaluation 
 This directory contains our evaluation script and visualizations.
