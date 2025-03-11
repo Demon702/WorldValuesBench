@@ -13,10 +13,14 @@ TEST_DATASET_DIR = f"{DATASET_DIR}/test"
 PROBE_DATASET_DIR = f"{DATASET_DIR}/probe"
 DATASET_CONSTRUCTION_DIR = os.path.join(CUR_DIR, '../')
 
+################## Make the probset directory ################
+os.makedirs(PROBE_DATASET_DIR, exist_ok=True)
+
+
 important_question_keys, important_demographic_keys = [], []
 
 ################## LOAD THE CASE STUDY QUESTIONS ################
-with open(f'{PROBE_DATASET_DIR}/value_questions.json', 'r') as f:
+with open(f'{CUR_DIR}/value_questions.json', 'r') as f:
     case_study_questions = json.load(f).keys()
     
 
@@ -40,14 +44,14 @@ with open(f'{DATASET_CONSTRUCTION_DIR}/codebook.json', 'r') as f:
 ################ GROUPING DEMOGRAPHIC ATTRIBUTES ####################
  
 # In the demography df adding a column for contitent to which the user belongs
-country_continent_df = pd.read_csv(f'{PROBE_DATASET_DIR}/country2continent.csv')
+country_continent_df = pd.read_csv(f'{CUR_DIR}/country2continent.csv')
 country_continent_mapping = {}
 for idx, row in country_continent_df.iterrows():
     country_continent_mapping[row['Country']] = row['Continent']
 test_demographic_df['Continent'] = test_demographic_df['B_COUNTRY'].map(lambda country: country_continent_mapping[country])
 
 # In the demography df adding a column for education level of the user
-education_level_df = pd.read_csv(f'{PROBE_DATASET_DIR}/education2level.csv')
+education_level_df = pd.read_csv(f'{CUR_DIR}/education2level.csv')
 
 education_level_mapping = {}
 for idx, row in education_level_df.iterrows():
