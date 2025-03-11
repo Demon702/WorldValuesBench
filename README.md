@@ -76,12 +76,11 @@ This directory contains the benchmark dataset.
 
 ### dataset_construction
 This directory contains a few intermediate and potentially reusable files that are generated during our dataset construction procedure.
-- **data_preparation.py**: It contains the end-to-end code to process the raw data and produce our structured dataset present in [WorldValuesBench](WorldValuesBench).
+- **data_preparation.py**: It contains the end-to-end code to process the raw data and produce our structured dataset present in [WorldValuesBench](WorldValuesBench), including the full, train, valid, and test splits.
 - **question_metadata.json**: It contains useful metadata for each question present in the dataset, same as [WorldValuesBench/question_metadata.json](WorldValuesBench/question_metadata.json).
 - **codebook.json**: It contains the mapping between the numerical answer (present in raw file) and the natural language answer.
 - **answer_adjustment.json**: It contains the remapping required for some of the answer choices to make them monotonic and ordinal.
-- **probe_set_construction**:
-	- **probe_set_construction.py**: It contains the code to produce our [probe](WorldValuesBench/probe_set_construction.py) set
+- **probe_set_construction.py**: It contains the code to produce our probe set.
 
 
 ### evaluation 
