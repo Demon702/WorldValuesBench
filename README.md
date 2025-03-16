@@ -10,7 +10,7 @@ WorldValuesBench is a global-scale benchmark dataset for studying multi-cultural
 Due to licensing issues, we can't distribute the raw data. But you can easily download it from the [WVS Wave 7 website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
  - Navigate to the [website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
  - Go to the `Statistical Data Files` section and click on `WVS Cross-National Wave 7 csv v6 0.zip` ![this](images/csv_file.png)
- - Fill out the form and download the raw csv data ![form](images/form.png)
+ - Fill out the form and download the raw csv data ![form](images/form.png). After you finish the form, it will automatically download the dataset, you don't need to wait for any approval step.
 
  ### Step 2: Create the Dataset
 
