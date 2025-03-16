@@ -22,13 +22,6 @@ from typing import Dict, Any
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_DIR = os.path.join(CUR_DIR, "../WorldValuesBench")
 
-
-########## ARGUMENT PARSING ##########
-parser = argparse.ArgumentParser(description='Prepare the dataset for training')
-parser.add_argument('--raw-dataset-path', type=str, help='Path to raw WVS csv data downloaded from https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp')
-args = parser.parse_args()
-
-
 ########## PREPROCESS ##########
 
 # Convert numbers like '1.0' to '1'
@@ -99,10 +92,18 @@ def process(
         return value
 
 def main():
+
+
+    ########## ARGUMENT PARSING ##########
+    parser = argparse.ArgumentParser(description='Prepare the dataset for training')
+    parser.add_argument('--raw-dataset-path', type=str, help='Path to raw WVS csv data downloaded from https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp')
+    args = parser.parse_args()
+
+
     ########## LOAD DATA ##########
 
     # Read the csv data downloaded from https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp
-    df = pd.read_csv(args.raw_dataset_path)
+    df = pd.read_csv(args.raw_dataset_path, low_memory=False)
 
     # filter duplicated INTERVIEW_ID rows
     # We noticed this user id appearing multiple times, so in our dataset we excluded this id
@@ -123,7 +124,8 @@ def main():
 
     # data transformation
     # filter required questions
-    req_question_keys = question_metadata.keys()
+
+    req_question_keys = list(question_metadata.keys())
     df = df[req_question_keys]
 
     # get preprocessing mappings

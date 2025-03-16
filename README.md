@@ -1,8 +1,25 @@
 # World Values Benchmark Dataset
 
-**NOTE: This repository is under construction and will be finalized soon.**
-
 WorldValuesBench is a global-scale benchmark dataset for studying multi-cultural human value awareness of language models, derived from an impactful social science project called the [World Values Survey (WVS) Wave 7](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
+
+
+## Dataset Creation
+
+### Step 1: Download the raw data
+
+Due to licensing issues, we can't distribute the raw data. But you can easily download it from the [WVS Wave 7 website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
+ - Navigate to the [website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
+ - Go to the `Statistical Data Files` section and click on `WVS Cross-National Wave 7 csv v6 0.zip` ![this](images/csv_file.png)
+ - Fill out the form and download the raw csv data ![form](images/form.png)
+
+ ### Step 2: Create the Dataset
+
+```
+python dataset_construction/data_preparation.py --raw-dataset-path <path_to_raw_csv_downloaded_in_step_1>
+```
+This parses the raw CSV and creates the dataset inside [WorldValuesBench](WorldValuesBench) folder. It also splits the data into train, valid and test splits which you can leverage for your experiments. Refer to [this section](#worldvaluesbench) for more details about the generated dataset.
+
+**NOTE**: We created our data processing pipeline according to `v5.0` data. WVS has since added `v6.0`. Our data processing pipeline is perfectly compatible with v6.0. However, v6.0 has some extra questions which were not present in v5.0, and therefore our pipeline ignores those questions. If you want to analyze those questions, please feel free to edit our [codebook](dataset_construction/codebook.json) and [question_metadata](dataset_construction/question_metadata.json) accordingly. 
 
 ## Task
 A safe and personalized language model should be aware of multi-cultural values and the answer distribution that people from various backgrounds may provide.
@@ -40,21 +57,14 @@ This directory contains a few intermediate and potentially reusable files that a
 - **question_metadata.json**: It contains useful metadata for each question present in the dataset, same as [WorldValuesBench/question_metadata.json](WorldValuesBench/question_metadata.json).
 - **codebook.json**: It contains the mapping between the numerical answer (present in raw file) and the natural language answer.
 - **answer_adjustment.json**: It contains the remapping required for some of the answer choices to make them monotonic and ordinal.
-- **probe_set_construction.py**: It contains the code to produce our probe set.
+- **probe_set_construction**:
+	- **probe_set_prepration.py**: It contains the code to generate the probe set samples that we used to run experiments on our models. You don't need to run this, we have already provided the samples in [samples.tsv](WorldValuesBench/probe/samples.tsv).
 
-| Split | #participants | #examples   |
-|-------|---------------|-------------|
-| train | 65,294        | 15,042,191  |
-| valid | 13,993        | 3,225,712   |
-| test  | 13,991        | 3,224,490   |
-| full  | 93,278        | 21,492,393  |
-| probe | 4,860         | 8,280       |
 
 ### WorldValuesBench
-This directory contains the benchmark dataset.
-- **question_metadata.json**
-    - Maps `question_id` to question texts and metadata.
+After you have created the dataset by following the instructions in [Dataset Creation](#dataset-creation), this directory will contain the benchmark dataset.
 - **full**
+	This contains data for **all** participants present in the survey.
 	- **full_demographic_qa.tsv**
 		- Each row is a participant with a unique D_INTERVIEW identifier. 
 		- Each column is a demographic question/variable that can be studied.
@@ -77,6 +87,16 @@ This directory contains the benchmark dataset.
 		- The `Question` column contains the IDs of the value questions that we study and can be used to retrieve the question from **value_questions.json** or **question_metadata.json**.
 		- The `Continent`, `Urban / Rural`, `Education` columns cluster participants into demographic groups that we study.
 		- The `D_INTERVIEW` column can be used to uniquely identify a participant and retrieve the participant demographic attributes and answer to the question from the valid set tsv files.
+
+
+| Split | #participants | #examples   |
+|-------|---------------|-------------|
+| train | 65,294        | 15,042,191  |
+| valid | 13,993        | 3,225,712   |
+| test  | 13,991        | 3,224,490   |
+| full  | 93,278        | 21,492,393  |
+| probe | 4,860         | 8,280       |
+
 
 ### evaluation 
 This directory contains our evaluation script and visualizations.
