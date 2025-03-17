@@ -5,21 +5,24 @@ WorldValuesBench is a global-scale benchmark dataset for studying multi-cultural
 
 ## Dataset Creation
 
-### Step 1: Download the raw data
+### Step 1: Download Raw Data
 
-Due to licensing issues, we can't distribute the raw data. But you can easily download it from the [WVS Wave 7 website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
- - Navigate to the [website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
- - Go to the `Statistical Data Files` section and click on `WVS Cross-National Wave 7 csv v6 0.zip` ![this](images/csv_file.png)
- - Fill out the form and download the raw csv data ![form](images/form.png). After you finish the form, it will automatically download the dataset, you don't need to wait for any approval step.
+Due to licensing issues, we can't distribute the raw data. But you can easily download it from the official website.
+ - Navigate to the [WVS Wave 7 website](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
+ - Go to the `Statistical Data Files` section and click on `WVS Cross-National Wave 7 csv v6 0.zip`
+   <img src="images/csv_file.png" width="500"/>
 
- ### Step 2: Create the Dataset
+ - Fill out the form and the raw csv data will be automatically downloaded.
+   <img src="images/form.png" width="500"/>
+
+ ### Step 2: Reproduce WorldValuesBench
 
 ```
 python dataset_construction/data_preparation.py --raw-dataset-path <path_to_raw_csv_downloaded_in_step_1>
 ```
 This parses the raw CSV and creates the dataset inside [WorldValuesBench](WorldValuesBench) folder. It also splits the data into train, valid and test splits which you can leverage for your experiments. Refer to [this section](#worldvaluesbench) for more details about the generated dataset.
 
-**NOTE**: We created our data processing pipeline according to `v5.0` data. WVS has since added `v6.0`. Our data processing pipeline is perfectly compatible with v6.0. However, v6.0 has some extra questions which were not present in v5.0, and therefore our pipeline ignores those questions. If you want to analyze those questions, please feel free to edit our [codebook](dataset_construction/codebook.json) and [question_metadata](dataset_construction/question_metadata.json) accordingly. 
+**NOTE**: We created our data processing pipeline according to WVS Wave 7 `v5.0`. WVS has since released Wave 7 `v6.0`. Our data processing pipeline is perfectly compatible with Wave 7 `v6.0`. The answer data for the questions that we used for the experiments in our paper are also unchanged from Wave 7 `v5.0` to `v6.0`. However, `v6.0` has some extra questions which were not present in `v5.0`. If you want to analyze those questions, please feel free to edit the [codebook](dataset_construction/codebook.json) and [question_metadata](dataset_construction/question_metadata.json) accordingly. WVS has also released Wave 8 data, to use which you can adapt assets in this repo accordingly.
 
 ## Task
 A safe and personalized language model should be aware of multi-cultural values and the answer distribution that people from various backgrounds may provide.
@@ -53,12 +56,12 @@ Your output should be in the following format:
 ## Repository Overview
 ### dataset_construction
 This directory contains a few intermediate and potentially reusable files that are generated during our dataset construction procedure.
-- **data_preparation.py**: It contains the end-to-end code to process the raw data and produce our structured dataset present in [WorldValuesBench](WorldValuesBench), including the full, train, valid, and test splits.
-- **question_metadata.json**: It contains useful metadata for each question present in the dataset, same as [WorldValuesBench/question_metadata.json](WorldValuesBench/question_metadata.json).
-- **codebook.json**: It contains the mapping between the numerical answer (present in raw file) and the natural language answer.
-- **answer_adjustment.json**: It contains the remapping required for some of the answer choices to make them monotonic and ordinal.
+- **data_preparation.py**: It contains the end-to-end code to process the raw data and produce our structured dataset present under [WorldValuesBench](WorldValuesBench), including the full, train, valid, and test splits.
+- **question_metadata.json**: It contains useful metadata for each question present in the dataset.
+- **codebook.json**: It contains the mapping between the numerical answer in raw data and the natural language answer according to the WVS Codebook Variables report that is available at the [World Values Survey (WVS) Wave 7 webpage](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp).
+- **answer_adjustment.json**: It contains the mapping required for some of the answer choices to make them monotonic and ordinal.
 - **probe_set_construction**:
-	- **probe_set_prepration.py**: It contains the code to generate the probe set samples that we used to run experiments on our models. You don't need to run this, we have already provided the samples in [samples.tsv](WorldValuesBench/probe/samples.tsv).
+	- **probe_set_prepration.py**: It contains the code to construct the probe data split that we used to run experiments in our paper. You don't need to run this, we have already provided the split in [samples.tsv](WorldValuesBench/probe/samples.tsv).
 
 
 ### WorldValuesBench
@@ -100,18 +103,12 @@ After you have created the dataset by following the instructions in [Dataset Cre
 
 ### evaluation 
 This directory contains our evaluation script and visualizations.
-- **evaluate.py**: It contains our evaluation script. It calculates the Earth Mover's Distance or (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html) between the ground truth distribution and model distribution for each question. It expects the input to be a csv / tsv file with the following three columns
+- **evaluate.py**: It contains our evaluation script. It calculates the Earth Mover's Distance or the [Wasserstein-1 distance](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html) between the ground truth distribution and model distribution for each question. It expects the input to be a csv / tsv file with the following three columns
 	- **QUESTION_ID** (The question key or ID from the dataset)
 	- **PARTICIPANT_ID** (The participant ID or D_INTERVIEW column from the dataset)
 	- **SCORE** (Model output for participant PARTICIPANT_ID and question QUESTION_ID)
 
-	You can provide any subset of questions and participants in the input file in any order.  
-
-	Our evaluation script outputs a dictionary and optionally writes it to a json file (if the `--output-file` flag is set). In the output
-	- keys are QUESTION_IDs
-	- values are Earth Mover's Distance between model output distribution and ground truth distribution for that question.
-		 
-	A sample inut file would look like
+	You can provide any subset of questions and participants in the input file in any order.  A sample input file looks like the following.
 
 	| QUESTION_ID | PARTICIPANT_ID | SCORE   |
 	|-------------|--------------- |---------|
@@ -122,8 +119,7 @@ This directory contains our evaluation script and visualizations.
 	|  Q3	        | 410070959	     |   3     |
 	|  Q3	        | 364072161	     |   3     |
 
-	A sample output would look like
-
+	Our evaluation script outputs a dictionary and optionally writes it to a json file (if the `--output-file` flag is set). Each key is a QUESTION_ID and each value is the Earth Mover's Distance between the model prediction distribution and the ground truth distribution for that question. A sample output json looks like the following:
 	```
 	{
 		"Q1": 1.0,
@@ -136,18 +132,18 @@ This directory contains our evaluation script and visualizations.
 		
 	`python evaluate.py --input-file <input-file> --output-file <path_to_write_output_json>`
 
-	You can also specify the input file separator if it's not a comma (,). For example, to run evaluation on our GPT-3.5 model (with demographic) outputs, run
+	You can also specify the input file separator if it's not a comma. For example, to run evaluation on our GPT-3.5 model (with demographic) outputs, run
 
 	`python evaluate.py --input-file model_outputs/gpt-3.5_with_demographics.tsv --output-file gpt-3.5_with_demographics-output.json --input-file-separator \\t`
 
-- **evaluation_and_plot.ipynb**: Jupyter notebook that has all the visualizations present in the paper.
-- **model_outputs**: All the model outputs from our experiments for reproducibility and facilitate further research.
+- **evaluation_and_plot.ipynb**: Jupyter notebook that has all the visualization in the paper.
+- **model_outputs**: All the model outputs from our experiments for reproducibility and to facilitate further research.
   
 ## Citation
 
 Wenlong Zhao*, Debanjan Mondal*, Niket Tandon, Danica Dillion, Kurt Gray, and Yuling Gu. 2024. [WorldValuesBench: A Large-Scale Benchmark Dataset for Multi-Cultural Value Awareness of Language Models](https://aclanthology.org/2024.lrec-main.1539). In Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024), pages 17696–17706, Torino, Italia. ELRA and ICCL.
 
-Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano, J., Lagos, M., Norris, P., Ponarin, E. & Puranen B. (2022): World Values Survey Wave 7 (2017-2022) Cross-National Data-Set. Version: 4.0.0. World Values Survey Association. DOI: doi.org/10.14281/18241.18
+Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano J., M. Lagos, P. Norris, E. Ponarin & B. Puranen (eds.). 2022. World Values Survey: Round Seven – Country-Pooled Datafile Version 6.0. Madrid, Spain & Vienna, Austria: JD Systems Institute & WVSA Secretariat. doi:10.14281/18241.24
 
 
 
